@@ -1,0 +1,44 @@
+# Minimum CMake is 3.22
+CMAKE_MINIMUM_REQUIRED(VERSION 3.22)
+
+# Set project name
+PROJECT(cpp-python_interop_experiments)
+
+# Find the python headers and library
+FIND_PACKAGE(Python3 COMPONENTS Development)
+
+# Find include files
+INCLUDE_DIRECTORIES(inc "${Python3_INCLUDE_DIRS}")
+
+# Find source files
+SET(SRC_DIR src)
+FILE(GLOB SOURCES ${SRC_DIR}/*.cpp)
+
+# Set up regular, Release and Debug C flags
+SET(CMAKE_C_FLAGS 
+    "${CMAKE_C_FLAGS} \
+    -Wall \
+    -Werror \
+    -Wextra")
+
+SET(CMAKE_CXX_FLAGS 
+    "${CMAKE_C_FLAGS} \
+    -std=c++20")
+
+SET(CMAKE_RELEASE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -DNDEBUG -UDEBUG")
+SET(CMAKE_RELEASE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -DNDEBUG -UDEBUG")
+
+SET(CMAKE_DEBUG_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -DDEBUG -UNDEBUG")
+SET(CMAKE_DEBUG_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 -DDEBUG -UNDEBUG")
+
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+SET(BIN hello)
+ADD_EXECUTABLE(${BIN} ${SOURCES})
+
+# Set up debug postfix
+SET(CMAKE_DEBUG_POSTFIX _debug.bin)
+SET(CMAKE_RELEASE_POSTFIX _release.bin)
+SET_TARGET_PROPERTIES(${BIN} 
+    PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+SET_TARGET_PROPERTIES(${BIN} 
+    PROPERTIES RELEASE_POSTFIX ${CMAKE_RELEASE_POSTFIX})
