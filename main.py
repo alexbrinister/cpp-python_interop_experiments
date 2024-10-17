@@ -2,7 +2,7 @@
 
 import ctypes
 from ctypes import cdll
-lib = cdll.LoadLibrary('./libcpppyinterop.so')
+lib = cdll.LoadLibrary('./build/libcpp-python-interop.so')
 
 size = 5
 
